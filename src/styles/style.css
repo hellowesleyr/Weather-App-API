@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@300&family=Nunito:ital,wght@1,300&display=swap');
+
+:root {
+
+}
+
+body {
+  
+}
+
+.imgRow{
+  background-color: var(--primaryColor);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.navBar{
+  background-color: var(--primaryColor);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color:white;
+  
+  font-size: 32px;
+  background-color: var(--primaryColor);
+}
+
+.hello {
+    color: white;
+    font-size: 32px;
+    background-color: var(--primaryColor);
+    font-family: 'Cormorant SC', serif;
+    /* font-family: 'Nunito', sans-serif; */
+  }
