@@ -1,29 +1,73 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@300&family=Nunito:ital,wght@1,300&display=swap');
 
 :root {
+  --borderColor: #F0F9FF;
+  --primaryColor: #38BDF8;
+  --secondaryColor: #BAE6FD;
+  --backgroundColor: #CFFAFE;
+  --darkBackgroundColor: #0284C7;
+}
 
+
+
+#content{
+  margin: 5rem auto;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  width: 66vw;
+  background-color: grey;
+  height: 50vh;
+  border-radius: 20px;
+  border: var(--borderColor) solid 2px;
+}
+
+.snapshotBar{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  flex-basis: 100%;
+}
+.snapshotItem{
+  transition: all 200;
+  flex-grow: 1;
+  font-size: 14px;
+  color: var(--borderColor);
+  background-color: var(--darkBackgroundColor);
+  padding: 10px;
+  margin: 0;
+  border-radius: 10px;
+  border: var(--borderColor) 1px solid;
+  border-bottom: 2px solid var(--borderColor);
+}
+
+.activeMarker{
+  border: solid var(--borderColor) 3px;
+  border-radius: 100px;
+  height: 5px;
+  
+}
+
+.activeMarker.active {
+  background-color: var(--backgroundColor);
+}
+
+.snapshotItem:hover{
+  background-color: var(--primaryColor);
+}
+
+.firstSnapshot{
+  border-left: none;
+}
+
+.lastSnapshot{
+  border-right: none;
 }
 
 body {
-  
+  background-color: var(--backgroundColor);
 }
 
-.imgRow{
-  background-color: var(--primaryColor);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-.navBar{
-  background-color: var(--primaryColor);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  color:white;
-  
-  font-size: 32px;
-  background-color: var(--primaryColor);
-}
 
 .hello {
     color: white;
