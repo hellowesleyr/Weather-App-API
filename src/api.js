@@ -57,16 +57,21 @@ const weatherManager = (() => {
     const timeData = myDate.split(" ")[1];
     const timeArr = timeData.split(":");
     const myTime = `${timeArr[0]}:00`; // +timeArr[1];
-
+    // console.log(weatherObject.main)
     const myTemp = getTempFromValue(weatherObject.main.temp);
+    const myFeelsLikeTemp = getTempFromValue(weatherObject.main.feels_like);
+
     const myWeather = weatherObject.weather[0].main;
     const myWeatherDescription = weatherObject.weather[0].description;
-    const myHumidity = `${weatherObject.main.humidity}` + `%`;
+    const myHumidity = `${weatherObject.main.humidity}%`;
+    const myIcon = weatherObject.weather[0].icon;
     const myWeatherObject = {
       date: myDate,
       dayofWeek: dayOfWeek,
       time: myTime,
       temp: myTemp,
+      icon: myIcon, 
+      feelsLikeTemp: myFeelsLikeTemp,
       weather: myWeather,
       weatherDescription: myWeatherDescription,
       humidity: myHumidity,

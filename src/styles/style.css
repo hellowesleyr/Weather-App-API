@@ -9,15 +9,24 @@
 }
 
 
+.backgroundImg{
+  position: absolute;
+  z-index: -1;
+  top:0;
+  left: 0;
+  width: 100vw;
+}
+
 
 #content{
+  font-size: 20px;
   margin: 5rem auto;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  width: 66vw;
+  width: 50vw;
   background-color: grey;
-  height: 50vh;
+  height: 25vw;
   border-radius: 20px;
   border: var(--borderColor) solid 2px;
 }
@@ -66,6 +75,7 @@
 
 body {
   background-color: var(--backgroundColor);
+  /* background-image: url('../img/sunny.png'); */
 }
 
 
