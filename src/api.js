@@ -1,19 +1,52 @@
-const weatherManager = (() => {
-  const location = "";
+import { values } from "lodash";
 
+const weatherManager = (() => {
+  const position = {
+    lat: undefined,
+    lon: undefined,
+  }
   const myKey = "e6cc0736d0dd71bc044c4e5f4ffab1c6";
 
   //   const async fetchLocation = () => {
   //     await
   //   }
-
+  
   const fetchWeather = async (city) => {
     const location = await fetchLocation(city);
     const simpleWeatherArr = await fetchWeatherfromLocation(location);
     return simpleWeatherArr;
   };
+  
+
+  const fetchWeatherfromLocation = async (location) => {
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${location.lat}&lon=${location.lon}&appid=${myKey}`
+    );
+    const weatherData = await response.json();
+    const simpleWeatherArr = [];
+    for (let i = 0; i < 8; i += 1) {
+      const simpleWeatherData = condenseWeatherData(weatherData.list[i],i);
+      simpleWeatherArr.push(simpleWeatherData);
+    }
+    return simpleWeatherArr;
+  };
+
+  
+  const setPosition = (geoPosition) => {
+    position.lat = geoPosition.coords.latitude;
+    position.lon = geoPosition.coords.longitude
+    console.log(position);
+  }
+
+  const getPosition = async () => {
+    const geoPosition = await navigator.geolocation.getCurrentPosition(setPosition)    
+  }
 
   const fetchLocation = async (city) => {
+    getPosition().then(value => {
+      console.log(position);
+    })
+    console.log(position.lat); 
     const response = await fetch(
       `http://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=${myKey}`
     );
@@ -81,18 +114,6 @@ const weatherManager = (() => {
     return myWeatherObject;
   };
 
-  const fetchWeatherfromLocation = async (location) => {
-    const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?lat=${location.lat}&lon=${location.lon}&appid=${myKey}`
-    );
-    const weatherData = await response.json();
-    const simpleWeatherArr = [];
-    for (let i = 0; i < 8; i += 1) {
-      const simpleWeatherData = condenseWeatherData(weatherData.list[i],i);
-      simpleWeatherArr.push(simpleWeatherData);
-    }
-    return simpleWeatherArr;
-  };
 
   return { fetchWeather, location, fetchLocation };
 })();

@@ -35,7 +35,8 @@
   flex-wrap: wrap;
   flex-direction: column;
   width: 50vw;
-  background-color: grey;
+  background-color: var(--darkBackgroundColor);
+  color: black;
   height: 25vw;
   border-radius: 20px;
   border: var(--borderColor) solid 2px;
