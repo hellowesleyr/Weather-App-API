@@ -16,28 +16,41 @@ const domManager = (() => {
     currentSnapshot: 0,
   };
 
-  const addEventListeners = (snapshotItems) => null
 
-  const populateCurrentSnapshot = (simpleWeatherArr) => {
+  
+  const setActiveMarkerSnapshot = (snapshotItems,thisSnapItem) => {
+    snapshotItems.forEach(snapItem => {
+      console.log(snapItem);
+      const tempActiveMarker = snapItem.querySelector('.activeMarker');
+      tempActiveMarker.classList.remove('active');
+    });
+    const activeMarker = thisSnapItem.querySelector('.activeMarker');
+    activeMarker.classList.add('active');
+  }
+
+  const addEventListeners = (snapshotItems,simpleWeatherArr) => {
+    snapshotItems.forEach(snapElem => {
+      snapElem.addEventListener('click', event => {
+        setActiveMarkerSnapshot(snapshotItems,snapElem);
+        const weatherIndex = snapElem.index;
+        populateCurrentSnapshot(simpleWeatherArr[weatherIndex]);
+        setBackgroundImg(simpleWeatherArr[weatherIndex]);
+    });
+  })
+}
+
+  const populateCurrentSnapshot = (weatherObj) => {
     const mainSnapshot = document.querySelector('.selectedSnapShot');
     const humidityText = mainSnapshot.querySelector('.humidityText');;
     const temperatureText = mainSnapshot.querySelector('.temperatureText');
     const tempFeelsLikeText = mainSnapshot.querySelector('.feelsLikeText')
     const weatherText = mainSnapshot.querySelector('.weatherText');
     const weatherDescText = mainSnapshot.querySelector('.weatherDescriptionText')
-    humidityText.innerText = `Humidity: ${simpleWeatherArr.humidity}`;
-    temperatureText.innerText = `Temperature: ${simpleWeatherArr.temp}°`;
-    tempFeelsLikeText.innerText = `Feels Like: ${simpleWeatherArr.feelsLikeTemp}°`
-    weatherText.innerText = `${simpleWeatherArr.weather} with ${simpleWeatherArr.weatherDescription}`;
-    switch (simpleWeatherArr.weather) {
-      case 'Clouds':
-      // document.querySelector('body').style['background-image'] = `url(${sunImg})`
+    humidityText.innerText = `Humidity: ${weatherObj.humidity}`;
+    temperatureText.innerText = `Temperature: ${weatherObj.temp}°`;
+    tempFeelsLikeText.innerText = `Feels Like: ${weatherObj.feelsLikeTemp}°`
+    weatherText.innerText = `${weatherObj.weather} with ${weatherObj.weatherDescription}`;
 
-        break;
-        default:
-          
-          break;
-    }
   }
 
   const setBackgroundImg = (simpleWeatherArr) => {
@@ -82,38 +95,49 @@ const domManager = (() => {
 
   const getIconFromWeatherObj = async (weatherObj) => {
     let iconImg = null;
-    await fetch (`http://openweathermap.org/img/wn/${weatherObj.icon}@2x.png`)
+    let imageObjectURL= null;
+    await (fetch (`http://openweathermap.org/img/wn/${weatherObj.icon}@2x.png`)
     .then( value => {
       iconImg = value
       // alert(iconImg);
       return iconImg
     })
+    .then(response => response.blob())
+    .then(imageBlob => {
+      imageObjectURL = URL.createObjectURL(imageBlob);
+      return imageObjectURL
+    }))
+    return imageObjectURL;
   }
 
   const populateSnapshotIcons = async (simpleWeatherArr) => {
      const snapShotItems = document.querySelectorAll('.snapshotItem');
-    addEventListeners(snapShotItems);
-    
-    for (let i = 0; i<8; i+=1) {
-      const weatherIcon = document.createElement('img');
-      const weatherObj = simpleWeatherArr[i];
-      const snapshotItem = snapShotItems[i];
-      // alert(value);
-    }
-    const promises = simpleWeatherArr.map(async weatherObj => {
-      console.log(weatherObj);console.log
-      const icon = await getIconFromWeatherObj(weatherObj);
-      return weatherObj.icon;
-    });
+    addEventListeners(snapShotItems,simpleWeatherArr);
+  
+    const promises = await (simpleWeatherArr.map(async weatherObj => {
+      await getIconFromWeatherObj(weatherObj)
+      .then (iconURL => {
+        const {index} = weatherObj;
+        const snapshotElem = document.querySelector(`#snapItem${index}`);
+        const weatherSection = snapshotElem.querySelector('.weatherSection');
+        const weatherIcon = document.createElement('img');
+        weatherIcon.src = iconURL;
+        weatherIcon.style.height = '36px'
+        weatherSection.appendChild(weatherIcon);
 
-    const icons = await Promise.all(promises);
-    console.log(icons);
+
+      })
+      
+    }));
+
+    
+
 
   }
 
+
   const populateSnapshotbar = (simpleWeatherArr) => {
     const snapShotItems = document.querySelectorAll('.snapshotItem');
-    addEventListeners(snapShotItems);
     for (let i = 0; i<8; i+=1) {
       const weatherIcon = document.createElement('img');
       const weatherObj = simpleWeatherArr[i];
@@ -121,6 +145,7 @@ const domManager = (() => {
       // snapShotItems.querySelector()
       // Bro you can run chain query selector from any node wtf
       const snapshotChildren = snapshotItem.children;
+      snapshotItem.index = i;
       snapshotChildren[0].innerText = `${weatherObj.dayofWeek  } ${  weatherObj.time}`
       snapshotChildren[1].innerText = weatherObj.temp
       snapshotChildren[2].innerText = weatherObj.weather

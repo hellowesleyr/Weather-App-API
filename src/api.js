@@ -48,8 +48,8 @@ const weatherManager = (() => {
   const getTempFromValue = (tempValue) =>
     Math.round((tempValue - 273) * 10) / 10;
 
-  const condenseWeatherData = (weatherObject) => {
-    console.log(weatherObject);
+  const condenseWeatherData = (weatherObject,indexValue) => {
+    // console.log(weatherObject);
     const myDate = weatherObject.dt_txt;
     const myDateObj = new Date(weatherObject.dt_txt);
     const dayOfWeek = getDayofWeek(myDateObj.getDay());
@@ -67,9 +67,11 @@ const weatherManager = (() => {
     const myIcon = weatherObject.weather[0].icon;
     const myWeatherObject = {
       date: myDate,
+      index: indexValue,
       dayofWeek: dayOfWeek,
       time: myTime,
       temp: myTemp,
+      iconImg: null,
       icon: myIcon, 
       feelsLikeTemp: myFeelsLikeTemp,
       weather: myWeather,
@@ -86,7 +88,7 @@ const weatherManager = (() => {
     const weatherData = await response.json();
     const simpleWeatherArr = [];
     for (let i = 0; i < 8; i += 1) {
-      const simpleWeatherData = condenseWeatherData(weatherData.list[i]);
+      const simpleWeatherData = condenseWeatherData(weatherData.list[i],i);
       simpleWeatherArr.push(simpleWeatherData);
     }
     return simpleWeatherArr;
