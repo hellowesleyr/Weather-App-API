@@ -1,4 +1,5 @@
-import { values } from "lodash";
+import { reject, values } from "lodash";
+
 
 const weatherManager = (() => {
   const position = {
@@ -10,10 +11,28 @@ const weatherManager = (() => {
   //   const async fetchLocation = () => {
   //     await
   //   }
-  
+
+  const getPromisePosition = () => new Promise (
+      (resolve,reject) => {
+        setTimeout(() => {
+          reject(error => {
+            console.log('too slow');
+          })
+        }, 10000);
+        navigator.geolocation.getCurrentPosition(myPosition => {
+          resolve(myPosition)
+          return myPosition
+        });
+      }
+    )
+
+
+
   const fetchWeather = async (city) => {
     const location = await fetchLocation(city);
+    const myPosition = await getPromisePosition()
     const simpleWeatherArr = await fetchWeatherfromLocation(location);
+
     return simpleWeatherArr;
   };
   
@@ -32,20 +51,24 @@ const weatherManager = (() => {
   };
 
   
-  const setPosition = (geoPosition) => {
-    position.lat = geoPosition.coords.latitude;
-    position.lon = geoPosition.coords.longitude
+  const setPosition = async (geoPosition) => {
+    position.lat = await geoPosition.coords.latitude;
+    position.lon = await geoPosition.coords.longitude
     console.log(position);
+
   }
 
-  const getPosition = async () => {
-    const geoPosition = await navigator.geolocation.getCurrentPosition(setPosition)    
+
+  const getPosition =  () => {
+    
+    Promise.resolve(navigator.geolocation.getCurrentPosition(setPosition));
   }
+
+
 
   const fetchLocation = async (city) => {
-    getPosition().then(value => {
-      console.log(position);
-    })
+    
+
     console.log(position.lat); 
     const response = await fetch(
       `http://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=${myKey}`
@@ -115,7 +138,7 @@ const weatherManager = (() => {
   };
 
 
-  return { fetchWeather, location, fetchLocation };
+  return { fetchWeather, location, fetchLocation, getPromisePosition, fetchWeatherfromLocation };
 })();
 
 export { weatherManager };

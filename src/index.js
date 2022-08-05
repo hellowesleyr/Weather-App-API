@@ -165,11 +165,63 @@ const domManager = (() => {
 
 })();
 
+const appManager = (() => {
+  const fetchWeather = () => {
+    console.log('loading');
+    weatherManager.getPromisePosition().then(value => {
+      console.log(value.coords.latitude);
+      const myPosition = {
+        lat: value.coords.latitude,
+        lon: value.coords.longitude,
+      }
+      weatherArr = weatherManager.fetchWeatherfromLocation(myPosition)
+      weatherArr.then(value => {
+        domManager.populateDom(value);
+      })
+    })
+    .catch(error => {
+      console.log("Couldn't establish connection, trying again");
+      fetchWeather();
+    })
+  }
+  return {fetchWeather}
+})()
+
+const test = () => new Promise (
+    
+    (resolve,reject) => {
+      setTimeout(() => {
+        alert('hello')
+        resolve(5);
+      }, 1000);
+
+    }
+  )
+
+// test().then(value => {
+//   alert(value);
+// })
+
+
 let weatherArr;
-weatherManager.fetchWeather("London").then(val => {
-  weatherArr = val
-  domManager.populateDom(weatherArr);
+// weatherManager.fetchWeather("London").then(val => {
+//   weatherArr = val
+//   domManager.populateDom(weatherArr);  
+// })
+
+// weatherManager.getPromisePosition().then(value => {
+//   console.log(value.coords.latitude);
+//   const myPosition = {
+//     lat: value.coords.latitude,
+//     lon: value.coords.longitude,
+//   }
+//   weatherArr = weatherManager.fetchWeatherfromLocation(myPosition)
+//   weatherArr.then(value => {
+//     domManager.populateDom(value);
+//   })
+// })
+// .catch(error => {
   
+// })
 
-})
-
+appManager.fetchWeather();
