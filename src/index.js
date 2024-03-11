@@ -1,10 +1,10 @@
 import "./styles/style.css";
-import { doc } from "prettier";
+// import { doc } from "prettier";
 import { weatherManager } from "./api";
 import sunImg from "./img/sunny.png";
 import rainImg from "./img/rain.jpeg";
 import cloudImg from "./img/cloud.png"
-import snowImg from "./img/rain.jpeg";
+import snowImg from "./img/snow.jpeg";
 import extremeImg from "./img/extreme.jpeg";
 import fogImg from "./img/fog.png"
 
